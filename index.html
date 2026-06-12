@@ -24,336 +24,194 @@
 
       --bg:        var(--gray-100);
       --surface:   var(--white);
-      --surface-2: var(--gray-50);
-      --surface-3: var(--gray-200);
       --text:      var(--black);
-      --text-muted:var(--gray-500);
+      --text-muted:var(--gray-600);
       --border:    var(--gray-200);
-      --border-strong: var(--gray-400);
-      --accent:    var(--black);
-      --accent-bg: var(--gray-100);
-
-      --radius-sm: 6px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --font: Georgia, 'Times New Roman', serif;
-      --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --radius-md: 12px;
+      --radius-lg: 16px;
     }
 
-    html { font-size: 18px; scroll-behavior: smooth; }
-
+    html { font-size: 17px; scroll-behavior: smooth; }
     body {
-      font-family: var(--font-ui);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
     }
 
-    /* ── Header ── */
     header {
       background: var(--black);
       padding: 0 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .logo { width: 42px; height: 42px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .header-title { font-size: 1.2rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+    .header-sub { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+    .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      margin-bottom: 1.5rem; padding: 1.2rem 1.4rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    }
+
+    /* Search */
+    .search-wrap { position: relative; flex: 1; min-width: 260px; }
+    .search-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 20px; }
+    #search {
+      width: 100%; padding: 12px 14px 12px 48px;
+      border: 2px solid var(--border); border-radius: var(--radius-md); font-size: 1.05rem;
+    }
+    #search:focus { border-color: var(--black); }
+
+    /* Filter Buttons */
+    .filter-btn {
+      padding: 9px 16px; 
+      border-radius: var(--radius-md); 
+      border: 2px solid var(--border);
+      background: var(--surface); 
+      cursor: pointer; 
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .filter-btn.active {
+      background: var(--black); 
+      color: white; 
+      border-color: var(--black);
+    }
+
+    /* Improved Sort Select */
+    .sort-wrap {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      height: 64px;
+      gap: 8px;
     }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .logo {
-      width: 36px; height: 36px;
-      border: 1.5px solid rgba(255,255,255,0.5);
-      border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .logo i { color: #fff; font-size: 20px; }
-    .header-title { font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; font-family: var(--font-ui); }
-    .header-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); letter-spacing: 0.02em; }
-
-    .header-date {
-      font-size: 0.78rem; color: rgba(255,255,255,0.45);
-      letter-spacing: 0.03em; text-align: right;
-    }
-
-    /* ── Page ── */
-    .page { max-width: 980px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
-
-    /* ── Controls ── */
-    .controls {
-      display: flex; flex-wrap: wrap;
-      gap: 10px; align-items: center;
-      margin-bottom: 1rem;
-      padding: 1rem 1.1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-    }
-    .search-wrap {
-      position: relative; flex: 1; min-width: 220px;
-    }
-    .search-wrap i {
-      position: absolute; left: 11px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted); font-size: 18px; pointer-events: none;
-    }
-    #search {
-      width: 100%; font-size: 1rem;
-      padding: 10px 14px 10px 36px;
-      border: 1.5px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-      font-family: var(--font-ui);
-    }
-    #search:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,0.08); }
-    #search::placeholder { color: var(--gray-400); }
-
-    .filter-btns { display: flex; gap: 7px; flex-wrap: wrap; }
-    .filter-btn {
-      font-size: 0.88rem;
-      padding: 8px 15px;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-strong);
-      background: var(--surface);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all .15s;
-      font-family: var(--font-ui);
-      letter-spacing: 0.01em;
-    }
-    .filter-btn:hover { border-color: var(--black); color: var(--black); }
-    .filter-btn.active {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--black);
-      font-weight: 600;
-    }
-
-    .sort-wrap { display: flex; align-items: center; gap: 8px; }
-    .sort-wrap label { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; }
-    #sort {
+    .sort-wrap label {
       font-size: 0.9rem;
-      padding: 8px 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    #sort {
+      appearance: none;
+      padding: 9px 36px 9px 16px;
+      border: 2px solid var(--border);
       border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-strong);
-      background: var(--surface);
-      color: var(--text);
+      background: var(--surface) url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27none%27 stroke=%27%23505050%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27/%3E%3C/svg%27') no-repeat right 12px center;
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
-      font-family: var(--font-ui);
+      color: var(--text);
+      min-width: 160px;
+    }
+    #sort:focus {
+      border-color: var(--black);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
     }
 
-    .count {
-      font-size: 0.82rem; color: var(--text-muted);
-      margin-bottom: 1rem;
-      letter-spacing: 0.02em; text-transform: uppercase;
-    }
-
-    /* ── Grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 16px;
     }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 1.1rem 1.2rem 1rem;
+      padding: 1.25rem;
       cursor: pointer;
-      transition: border-color .15s, box-shadow .15s;
-      display: flex; flex-direction: column; gap: 9px;
+      transition: all 0.25s ease;
     }
     .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -8px rgba(0,0,0,0.15);
       border-color: var(--black);
-      box-shadow: 3px 3px 0 var(--black);
     }
 
-    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-
+    .card-top {
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .card-logo {
+      width: 48px; height: 48px;
+      border-radius: 10px; object-fit: contain;
+      background: #f8f8f8; padding: 4px;
+    }
     .symbol-badge {
-      font-size: 0.75rem; font-weight: 700;
-      background: var(--black); color: var(--white);
-      padding: 3px 10px; border-radius: var(--radius-sm);
-      white-space: nowrap; letter-spacing: 0.06em; text-transform: uppercase;
-      font-family: var(--font-ui);
+      font-size: 0.95rem; font-weight: 700;
+      background: var(--black); color: white;
+      padding: 4px 12px; border-radius: 9999px;
     }
     .cat-badge {
-      font-size: 0.72rem; padding: 3px 9px;
-      border-radius: var(--radius-sm); white-space: nowrap; font-weight: 500;
-      letter-spacing: 0.03em;
+      font-size: 0.78rem; padding: 3px 10px;
+      border-radius: var(--radius-sm); font-weight: 500;
     }
-    .cat-us {
-      background: var(--white);
-      color: var(--gray-600);
-      border: 1px solid var(--gray-300);
-    }
-    .cat-ca {
-      background: var(--gray-200);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-300);
-    }
+    .cat-us { background: #f0f0f0; color: #333; }
+    .cat-ca { background: #e6f0ff; color: #0066cc; }
 
-    .card-name { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
-    .card-ticker {
-      font-size: 0.85rem; color: var(--text-muted);
-      display: flex; align-items: center; gap: 5px;
-      font-family: monospace; letter-spacing: 0.02em;
-    }
+    .card-name { font-size: 1.1rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+    .card-ticker { color: var(--text-muted); font-family: monospace; }
 
-    .card-divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
-
-    .card-actions { display: flex; gap: 7px; }
-
-    .btn-details {
-      flex: 1; padding: 9px 8px; font-size: 0.9rem;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-strong);
-      background: var(--surface-2);
-      color: var(--text);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-      font-family: var(--font-ui);
-      transition: all .15s;
-    }
-    .btn-details:hover {
-      background: var(--black); color: var(--white); border-color: var(--black);
-    }
-
-    .btn-yahoo {
-      flex: 1; padding: 9px 8px; font-size: 0.9rem;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--black);
-      background: var(--white);
-      color: var(--black);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-      text-decoration: none;
-      font-family: var(--font-ui);
-      transition: all .15s;
-      font-weight: 600;
-    }
-    .btn-yahoo:hover { background: var(--black); color: var(--white); }
-
-    /* ── Empty ── */
-    .empty {
-      text-align: center; padding: 3rem 1rem;
-      color: var(--text-muted); font-size: 1.1rem;
-      display: none;
-    }
-    .empty i { font-size: 48px; display: block; margin-bottom: 12px; }
-
-    /* ── Modal ── */
+    /* Modal */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.65); z-index: 200;
-      align-items: center; justify-content: center;
-      padding: 1rem;
+      background: rgba(0,0,0,0.7); z-index: 200;
+      align-items: center; justify-content: center; padding: 1rem;
     }
     .modal-overlay.open { display: flex; }
 
     .modal {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      border: 1.5px solid var(--black);
-      box-shadow: 6px 6px 0 var(--black);
-      padding: 1.5rem;
-      max-width: 460px; width: 100%;
-      max-height: 90vh; overflow-y: auto;
+      background: white; border-radius: var(--radius-lg);
+      max-width: 520px; width: 100%; max-height: 92vh; overflow-y: auto;
     }
     .modal-header {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; margin-bottom: 1.25rem;
-      gap: 12px; padding-bottom: 1rem;
-      border-bottom: 2px solid var(--black);
+      padding: 1.5rem 1.5rem 1rem; display: flex; gap: 16px;
     }
-    .modal-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.4; }
-    .modal-close {
-      font-size: 26px; cursor: pointer;
-      color: var(--text-muted); background: none;
-      border: none; line-height: 1; padding: 2px 6px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-ui);
-      flex-shrink: 0; transition: all .12s;
-    }
-    .modal-close:hover { background: var(--black); color: var(--white); }
+    .modal-logo { width: 72px; height: 72px; border-radius: 14px; object-fit: contain; background: #f8f8f8; padding: 8px; }
+    .modal-close { font-size: 28px; cursor: pointer; background: none; border: none; color: var(--text-muted); }
 
-    .info-row {
-      display: flex; align-items: flex-start;
-      gap: 12px; padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .info-row:last-child { border-bottom: none; }
-    .info-row > i { font-size: 20px; color: var(--gray-500); width: 26px; flex-shrink: 0; margin-top: 2px; }
-    .info-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .info-value { font-size: 1rem; font-weight: 600; color: var(--text); }
-
-    .modal-yahoo {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin-top: 1.25rem; padding: 13px;
-      font-size: 1rem; font-weight: 700;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--black);
-      background: var(--black);
-      color: var(--white);
-      text-decoration: none;
-      transition: all .15s;
-      letter-spacing: 0.02em;
-    }
-    .modal-yahoo:hover { background: var(--white); color: var(--black); }
-
-    /* ── Footer ── */
-    footer {
-      background: var(--black);
-      color: rgba(255,255,255,0.4);
-      text-align: center;
-      padding: 1.25rem 1rem;
-      font-size: 0.8rem;
-      margin-top: 2.5rem;
-      letter-spacing: 0.03em;
-    }
-    footer span { color: rgba(255,255,255,0.7); }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      html { font-size: 16px; }
-      .grid { grid-template-columns: 1fr; }
-      .controls { gap: 8px; }
-    }
+    .modal-body { padding: 1.5rem; }
+    .modal-description { line-height: 1.7; font-size: 1.02rem; margin: 1.25rem 0; }
   </style>
 </head>
 <body>
 
 <header>
   <div class="header-left">
-    <div class="logo" aria-hidden="true"><i class="ti ti-chart-line"></i></div>
+    <div class="logo">📈</div>
     <div>
       <div class="header-title">My Stock Watch</div>
-      <div class="header-sub">48 stocks &middot; Canadian market</div>
+      <div class="header-sub">48 Stocks • Canadian View</div>
     </div>
   </div>
-  <div class="header-date" id="hdate"></div>
+  <div id="hdate" style="color:rgba(255,255,255,0.6); font-size:0.9rem;"></div>
 </header>
 
 <main class="page">
   <div class="controls">
     <div class="search-wrap">
-      <i class="ti ti-search" aria-hidden="true"></i>
-      <input type="text" id="search" placeholder="Search by name or symbol…" oninput="render()" aria-label="Search stocks">
+      <i class="ti ti-search"></i>
+      <input type="text" id="search" placeholder="Search symbol or company name..." oninput="render()">
     </div>
-    <div class="filter-btns" role="group" aria-label="Filter stocks">
+
+    <div class="filter-btns">
       <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
       <button class="filter-btn" onclick="setFilter('us',this)">US CDR</button>
       <button class="filter-btn" onclick="setFilter('ca',this)">Canadian</button>
     </div>
+
+    <!-- Improved Sort -->
     <div class="sort-wrap">
-      <label for="sort">Sort:</label>
+      <label for="sort">Sort by:</label>
       <select id="sort" onchange="render()">
         <option value="name">Name A–Z</option>
         <option value="symbol">Symbol A–Z</option>
@@ -361,90 +219,428 @@
     </div>
   </div>
 
-  <p class="count" id="count" aria-live="polite"></p>
-  <div class="grid" id="grid" role="list"></div>
-  <div class="empty" id="empty" role="status">
-    <i class="ti ti-mood-empty" aria-hidden="true"></i>
-    No stocks found. Try a different search.
-  </div>
+  <p id="count" style="margin: 0 0 1rem 0; color: var(--text-muted); font-weight:500;"></p>
+  <div class="grid" id="grid"></div>
 </main>
 
-<footer>
-  <i class="ti ti-shield-check" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"></i>
-  <span>My Stock Watch</span> &mdash; For informational purposes only. Not financial advice. &copy; 2026
-</footer>
+<footer>For informational purposes only • Not financial advice • © 2026</footer>
 
 <!-- Modal -->
-<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-name" onclick="closeModalOnBg(event)">
-  <div class="modal" id="modal-box">
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
     <div class="modal-header">
-      <h2 id="m-name"></h2>
-      <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">&times;</button>
+      <img id="m-logo" class="modal-logo" src="" alt="">
+      <div style="flex:1">
+        <h2 id="m-name" style="margin:0 0 4px 0; font-size:1.35rem;"></h2>
+        <div id="m-ticker" style="font-family:monospace; color:#555;"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
     </div>
-    <div id="m-body"></div>
-    <a id="m-yahoo" class="modal-yahoo" href="#" target="_blank" rel="noopener noreferrer">
-      <i class="ti ti-external-link" aria-hidden="true"></i> Open on Yahoo Finance
-    </a>
+    <div class="modal-body" id="m-body"></div>
   </div>
 </div>
 
 <script>
-document.getElementById('hdate').textContent = new Date().toLocaleDateString('en-CA', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-
 const stocks = [
-  {"symbol":"NVDA","name":"NVIDIA Corp. CAD Hedged CDR","canadian_ticker":"NVDA.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/NVDA.NE/"},
-  {"symbol":"AAPL","name":"Apple Inc. CAD Hedged CDR","canadian_ticker":"AAPL.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AAPL.NE/"},
-  {"symbol":"MSFT","name":"Microsoft Corp. CAD Hedged CDR","canadian_ticker":"MSFT.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MSFT.NE/"},
-  {"symbol":"GOOGL","name":"Alphabet Inc. CAD Hedged CDR","canadian_ticker":"GOOG.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GOOG.NE/"},
-  {"symbol":"AVGO","name":"Broadcom Inc. CAD Hedged CDR","canadian_ticker":"AVGO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AVGO.NE/"},
-  {"symbol":"TSLA","name":"Tesla Inc. CAD Hedged CDR","canadian_ticker":"TSLA.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TSLA.NE/"},
-  {"symbol":"MU","name":"Micron Technology Inc. CAD Hedged CDR","canadian_ticker":"MU.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MU.NE/"},
-  {"symbol":"LLY","name":"Eli Lilly & Co. CAD Hedged CDR","canadian_ticker":"LLY.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/LLY.NE/"},
-  {"symbol":"AMD","name":"Advanced Micro Devices Inc. CAD Hedged CDR","canadian_ticker":"AMD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AMD.NE/"},
-  {"symbol":"XOM","name":"Exxon Mobil Corp. CAD Hedged CDR","canadian_ticker":"XOM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/XOM.NE/"},
-  {"symbol":"JNJ","name":"Johnson & Johnson CAD Hedged CDR","canadian_ticker":"JNJ.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/JNJ.NE/"},
-  {"symbol":"CSCO","name":"Cisco Systems Inc. CAD Hedged CDR","canadian_ticker":"CSCO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CSCO.NE/"},
-  {"symbol":"LRCX","name":"Lam Research Corp. CAD Hedged CDR","canadian_ticker":"LRCX.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/LRCX.NE/"},
-  {"symbol":"ABBV","name":"AbbVie Inc. CAD Hedged CDR","canadian_ticker":"ABBV.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ABBV.NE/"},
-  {"symbol":"AMAT","name":"Applied Materials Inc. CAD Hedged CDR","canadian_ticker":"AMAT.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AMAT.NE/"},
-  {"symbol":"ORCL","name":"Oracle Corp. CAD Hedged CDR","canadian_ticker":"ORCL.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ORCL.NE/"},
-  {"symbol":"PG","name":"Procter & Gamble Co. CAD Hedged CDR","canadian_ticker":"PG.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PG.NE/"},
-  {"symbol":"HD","name":"Home Depot Inc. CAD Hedged CDR","canadian_ticker":"HD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/HD.NE/"},
-  {"symbol":"MRK","name":"Merck & Co. Inc. CAD Hedged CDR","canadian_ticker":"MRK.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MRK.NE/"},
-  {"symbol":"TXN","name":"Texas Instruments Inc. CAD Hedged CDR","canadian_ticker":"TXN.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TXN.NE/"},
-  {"symbol":"GEV","name":"GE Vernova Inc. CAD Hedged CDR","canadian_ticker":"GEV.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GEV.NE/"},
-  {"symbol":"QCOM","name":"Qualcomm Inc. CAD Hedged CDR","canadian_ticker":"QCOM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/QCOM.NE/"},
-  {"symbol":"KLAC","name":"KLA Corp. CAD Hedged CDR","canadian_ticker":"KLAC.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/KLAC.NE/"},
-  {"symbol":"IBM","name":"International Business Machines Corp. CAD Hedged CDR","canadian_ticker":"IBM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/IBM.NE/"},
-  {"symbol":"PANW","name":"Palo Alto Networks Inc. CAD Hedged CDR","canadian_ticker":"PANW.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PANW.NE/"},
-  {"symbol":"PEP","name":"PepsiCo Inc. CAD Hedged CDR","canadian_ticker":"PEP.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PEP.NE/"},
-  {"symbol":"TMO","name":"Thermo Fisher Scientific Inc. CAD Hedged CDR","canadian_ticker":"TMO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TMO.NE/"},
-  {"symbol":"TJX","name":"TJX Companies Inc. CAD Hedged CDR","canadian_ticker":"TJX.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TJX.NE/"},
-  {"symbol":"GILD","name":"Gilead Sciences Inc. CAD Hedged CDR","canadian_ticker":"GILD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GILD.NE/"},
-  {"symbol":"CRWD","name":"CrowdStrike Holdings Inc. CAD Hedged CDR","canadian_ticker":"CRWD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CRWD.NE/"},
-  {"symbol":"CRM","name":"Salesforce Inc. CAD Hedged CDR","canadian_ticker":"CRM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CRM.NE/"},
-  {"symbol":"ANET","name":"Arista Networks Inc. CAD Hedged CDR","canadian_ticker":"ANET.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ANET.NE/"},
-  {"symbol":"UNP","name":"Union Pacific Corp. CAD Hedged CDR","canadian_ticker":"UNP.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/UNP.NE/"},
-  {"symbol":"SHOP","name":"Shopify Inc.","canadian_ticker":"SHOP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SHOP.TO/"},
-  {"symbol":"CSU","name":"Constellation Software Inc.","canadian_ticker":"CSU.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CSU.TO/"},
-  {"symbol":"CNR","name":"Canadian National Railway Company","canadian_ticker":"CNR.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CNR.TO/"},
-  {"symbol":"CP","name":"Canadian Pacific Kansas City Limited","canadian_ticker":"CP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CP.TO/"},
-  {"symbol":"STN","name":"Stantec Inc.","canadian_ticker":"STN.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/STN.TO/"},
-  {"symbol":"TIH","name":"Toromont Industries Ltd.","canadian_ticker":"TIH.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/TIH.TO/"},
-  {"symbol":"DSG","name":"Descartes Systems Group Inc.","canadian_ticker":"DSG.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/DSG.TO/"},
-  {"symbol":"CNQ","name":"Canadian Natural Resources Limited","canadian_ticker":"CNQ.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CNQ.TO/"},
-  {"symbol":"SU","name":"Suncor Energy Inc.","canadian_ticker":"SU.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SU.TO/"},
-  {"symbol":"CVE","name":"Cenovus Energy Inc.","canadian_ticker":"CVE.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CVE.TO/"},
-  {"symbol":"IMO","name":"Imperial Oil Limited","canadian_ticker":"IMO.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/IMO.TO/"},
-  {"symbol":"AEM","name":"Agnico Eagle Mines Limited","canadian_ticker":"AEM.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/AEM.TO/"},
-  {"symbol":"WPM","name":"Wheaton Precious Metals Corp.","canadian_ticker":"WPM.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/WPM.TO/"},
-  {"symbol":"CCO","name":"Cameco Corporation","canadian_ticker":"CCO.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CCO.TO/"},
-  {"symbol":"MEG","name":"MEG Energy Corp.","canadian_ticker":"MEG.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/MEG.TO/"},
-  {"symbol":"SAP","name":"Saputo Inc.","canadian_ticker":"SAP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SAP.TO/"}
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corp. CAD Hedged CDR",
+    "canadian_ticker": "NVDA.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/NVDA.NE/",
+    "description": "NVIDIA Corporation is a leading designer of graphics processing units (GPUs), AI accelerators, and related software. It powers gaming, data centers, professional visualization, and autonomous vehicles, and is a key player in accelerated computing and AI infrastructure.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/NVDA.png"
+  },
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc. CAD Hedged CDR",
+    "canadian_ticker": "AAPL.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/AAPL.NE/",
+    "description": "Apple Inc. designs, manufactures, and markets consumer electronics, software, and online services. Best known for iPhone, Mac, iPad, Apple Watch, and services like the App Store, Apple Music, and iCloud.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/AAPL.png"
+  },
+  {
+    "symbol": "MSFT",
+    "name": "Microsoft Corp. CAD Hedged CDR",
+    "canadian_ticker": "MSFT.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/MSFT.NE/",
+    "description": "Microsoft Corporation develops and sells software, services, devices, and cloud solutions. Key products include Windows, Office 365, Azure cloud platform, LinkedIn, and Xbox.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/MSFT.png"
+  },
+  {
+    "symbol": "GOOGL",
+    "name": "Alphabet Inc. CAD Hedged CDR",
+    "canadian_ticker": "GOOG.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/GOOG.NE/",
+    "description": "Alphabet Inc. is the parent company of Google. It offers search, advertising, Android, YouTube, Google Cloud, hardware (Pixel), and operates other bets in areas like life sciences and autonomous vehicles.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/GOOGL.png"
+  },
+  {
+    "symbol": "AVGO",
+    "name": "Broadcom Inc. CAD Hedged CDR",
+    "canadian_ticker": "AVGO.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/AVGO.NE/",
+    "description": "Broadcom Inc. designs and supplies semiconductors and infrastructure software. It serves networking, data centers, wireless, broadband, storage, and industrial markets, with strong AI-related offerings.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/AVGO.png"
+  },
+  {
+    "symbol": "TSLA",
+    "name": "Tesla Inc. CAD Hedged CDR",
+    "canadian_ticker": "TSLA.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/TSLA.NE/",
+    "description": "Tesla, Inc. designs, manufactures, and sells electric vehicles, energy storage systems (Powerwall, Megapack), solar energy products, and develops autonomous driving technology.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/TSLA.png"
+  },
+  {
+    "symbol": "MU",
+    "name": "Micron Technology Inc. CAD Hedged CDR",
+    "canadian_ticker": "MU.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/MU.NE/",
+    "description": "Micron Technology, Inc. is a major producer of memory and storage solutions, including DRAM, NAND flash, and SSDs for data centers, PCs, mobile, automotive, and AI applications.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/MU.png"
+  },
+  {
+    "symbol": "LLY",
+    "name": "Eli Lilly & Co. CAD Hedged CDR",
+    "canadian_ticker": "LLY.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/LLY.NE/",
+    "description": "Eli Lilly and Company is a global pharmaceutical firm focused on diabetes, oncology, immunology, neuroscience, and cardiometabolic medicines (e.g., Mounjaro, Zepbound).",
+    "logo_url": "https://financialmodelingprep.com/image-stock/LLY.png"
+  },
+  {
+    "symbol": "AMD",
+    "name": "Advanced Micro Devices Inc. CAD Hedged CDR",
+    "canadian_ticker": "AMD.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/AMD.NE/",
+    "description": "Advanced Micro Devices, Inc. (AMD) designs high-performance CPUs, GPUs, and adaptive computing products for data centers, PCs, gaming, and embedded systems.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/AMD.png"
+  },
+  {
+    "symbol": "XOM",
+    "name": "Exxon Mobil Corp. CAD Hedged CDR",
+    "canadian_ticker": "XOM.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/XOM.NE/",
+    "description": "Exxon Mobil Corporation is one of the world's largest integrated oil and gas companies, engaged in exploration, production, refining, chemicals, and fuels.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/XOM.png"
+  },
+  {
+    "symbol": "JNJ",
+    "name": "Johnson & Johnson CAD Hedged CDR",
+    "canadian_ticker": "JNJ.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/JNJ.NE/",
+    "description": "Johnson & Johnson is a diversified healthcare company with pharmaceuticals (Innovative Medicine) and medical devices/technologies (MedTech) across oncology, immunology, surgery, and more.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/JNJ.png"
+  },
+  {
+    "symbol": "CSCO",
+    "name": "Cisco Systems Inc. CAD Hedged CDR",
+    "canadian_ticker": "CSCO.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CSCO.NE/",
+    "description": "Cisco Systems, Inc. provides networking hardware, software, security, collaboration (Webex), and cloud solutions that power the internet and enterprise connectivity.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CSCO.png"
+  },
+  {
+    "symbol": "LRCX",
+    "name": "Lam Research Corp. CAD Hedged CDR",
+    "canadian_ticker": "LRCX.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/LRCX.NE/",
+    "description": "Lam Research Corporation supplies wafer fabrication equipment and services used in the production of semiconductors and advanced electronics.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/LRCX.png"
+  },
+  {
+    "symbol": "ABBV",
+    "name": "AbbVie Inc. CAD Hedged CDR",
+    "canadian_ticker": "ABBV.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/ABBV.NE/",
+    "description": "AbbVie Inc. is a biopharmaceutical company focused on immunology (Humira successor drugs), oncology, neuroscience, and other specialty therapeutics.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/ABBV.png"
+  },
+  {
+    "symbol": "AMAT",
+    "name": "Applied Materials Inc. CAD Hedged CDR",
+    "canadian_ticker": "AMAT.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/AMAT.NE/",
+    "description": "Applied Materials, Inc. provides manufacturing equipment, services, and software for the semiconductor, display, and related industries.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/AMAT.png"
+  },
+  {
+    "symbol": "ORCL",
+    "name": "Oracle Corp. CAD Hedged CDR",
+    "canadian_ticker": "ORCL.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/ORCL.NE/",
+    "description": "Oracle Corporation offers database software, cloud infrastructure (OCI), enterprise applications, and hardware solutions.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/ORCL.png"
+  },
+  {
+    "symbol": "PG",
+    "name": "Procter & Gamble Co. CAD Hedged CDR",
+    "canadian_ticker": "PG.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/PG.NE/",
+    "description": "The Procter & Gamble Company manufactures and sells a wide range of consumer packaged goods, including beauty, grooming, health care, fabric, and home care products.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/PG.png"
+  },
+  {
+    "symbol": "HD",
+    "name": "Home Depot Inc. CAD Hedged CDR",
+    "canadian_ticker": "HD.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/HD.NE/",
+    "description": "The Home Depot, Inc. is the world's largest home improvement retailer, selling tools, construction products, and services to DIY customers and professionals.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/HD.png"
+  },
+  {
+    "symbol": "MRK",
+    "name": "Merck & Co. Inc. CAD Hedged CDR",
+    "canadian_ticker": "MRK.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/MRK.NE/",
+    "description": "Merck & Co., Inc. (MSD outside the US) is a global pharmaceutical company known for oncology (Keytruda), vaccines, and animal health products.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/MRK.png"
+  },
+  {
+    "symbol": "TXN",
+    "name": "Texas Instruments Inc. CAD Hedged CDR",
+    "canadian_ticker": "TXN.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/TXN.NE/",
+    "description": "Texas Instruments Incorporated designs and manufactures semiconductors, especially analog chips and embedded processors for industrial, automotive, and consumer electronics.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/TXN.png"
+  },
+  {
+    "symbol": "GEV",
+    "name": "GE Vernova Inc. CAD Hedged CDR",
+    "canadian_ticker": "GEV.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/GEV.NE/",
+    "description": "GE Vernova Inc. provides energy equipment, services, and solutions in power generation, grid, and electrification (spun from GE).",
+    "logo_url": "https://financialmodelingprep.com/image-stock/GEV.png"
+  },
+  {
+    "symbol": "QCOM",
+    "name": "Qualcomm Inc. CAD Hedged CDR",
+    "canadian_ticker": "QCOM.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/QCOM.NE/",
+    "description": "Qualcomm Incorporated designs semiconductors and wireless technologies, particularly Snapdragon mobile processors and 5G/ connectivity solutions.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/QCOM.png"
+  },
+  {
+    "symbol": "KLAC",
+    "name": "KLA Corp. CAD Hedged CDR",
+    "canadian_ticker": "KLAC.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/KLAC.NE/",
+    "description": "KLA Corporation supplies process control and yield management solutions for the semiconductor and electronics industries.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/KLAC.png"
+  },
+  {
+    "symbol": "IBM",
+    "name": "International Business Machines Corp. CAD Hedged CDR",
+    "canadian_ticker": "IBM.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/IBM.NE/",
+    "description": "International Business Machines Corporation (IBM) provides hybrid cloud, AI (Watson), consulting, and software solutions.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/IBM.png"
+  },
+  {
+    "symbol": "PANW",
+    "name": "Palo Alto Networks Inc. CAD Hedged CDR",
+    "canadian_ticker": "PANW.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/PANW.NE/",
+    "description": "Palo Alto Networks, Inc. is a cybersecurity leader offering firewalls, cloud security, endpoint protection, and threat intelligence.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/PANW.png"
+  },
+  {
+    "symbol": "PEP",
+    "name": "PepsiCo Inc. CAD Hedged CDR",
+    "canadian_ticker": "PEP.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/PEP.NE/",
+    "description": "PepsiCo, Inc. manufactures and markets a wide variety of beverages (Pepsi, Gatorade) and snacks (Frito-Lay, Quaker).",
+    "logo_url": "https://financialmodelingprep.com/image-stock/PEP.png"
+  },
+  {
+    "symbol": "TMO",
+    "name": "Thermo Fisher Scientific Inc. CAD Hedged CDR",
+    "canadian_ticker": "TMO.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/TMO.NE/",
+    "description": "Thermo Fisher Scientific Inc. provides scientific instruments, reagents, consumables, software, and services for life sciences, healthcare, and research.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/TMO.png"
+  },
+  {
+    "symbol": "TJX",
+    "name": "TJX Companies Inc. CAD Hedged CDR",
+    "canadian_ticker": "TJX.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/TJX.NE/",
+    "description": "The TJX Companies, Inc. is a leading off-price retailer operating stores like TJ Maxx, Marshalls, and HomeGoods.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/TJX.png"
+  },
+  {
+    "symbol": "GILD",
+    "name": "Gilead Sciences Inc. CAD Hedged CDR",
+    "canadian_ticker": "GILD.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/GILD.NE/",
+    "description": "Gilead Sciences, Inc. is a biopharmaceutical company focused on antiviral therapies (HIV, hepatitis), oncology, and liver diseases.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/GILD.png"
+  },
+  {
+    "symbol": "CRWD",
+    "name": "CrowdStrike Holdings Inc. CAD Hedged CDR",
+    "canadian_ticker": "CRWD.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CRWD.NE/",
+    "description": "CrowdStrike Holdings, Inc. provides cloud-native endpoint security, threat intelligence, and cybersecurity platforms.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CRWD.png"
+  },
+  {
+    "symbol": "CRM",
+    "name": "Salesforce Inc. CAD Hedged CDR",
+    "canadian_ticker": "CRM.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CRM.NE/",
+    "description": "Salesforce, Inc. offers customer relationship management (CRM) software, cloud platforms, and enterprise applications.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CRM.png"
+  },
+  {
+    "symbol": "ANET",
+    "name": "Arista Networks Inc. CAD Hedged CDR",
+    "canadian_ticker": "ANET.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/ANET.NE/",
+    "description": "Arista Networks, Inc. provides high-speed networking switches and software for data centers and cloud computing.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/ANET.png"
+  },
+  {
+    "symbol": "UNP",
+    "name": "Union Pacific Corp. CAD Hedged CDR",
+    "canadian_ticker": "UNP.NE",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/UNP.NE/",
+    "description": "Union Pacific Corporation operates one of the largest railroad networks in the United States, transporting freight.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/UNP.png"
+  },
+  {
+    "symbol": "SHOP",
+    "name": "Shopify Inc.",
+    "canadian_ticker": "SHOP.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/SHOP.TO/",
+    "description": "Shopify Inc. provides an e-commerce platform that enables businesses to create online stores and manage sales across channels.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/SHOP.png"
+  },
+  {
+    "symbol": "CSU",
+    "name": "Constellation Software Inc.",
+    "canadian_ticker": "CSU.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CSU.TO/",
+    "description": "Constellation Software Inc. acquires, manages, and builds vertical market software businesses.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CSU.png"
+  },
+  {
+    "symbol": "CNR",
+    "name": "Canadian National Railway Company",
+    "canadian_ticker": "CNR.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CNR.TO/",
+    "description": "Canadian National Railway Company is a major North American freight railway operating extensive rail networks in Canada and the US.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CNR.png"
+  },
+  {
+    "symbol": "CP",
+    "name": "Canadian Pacific Kansas City Limited",
+    "canadian_ticker": "CP.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CP.TO/",
+    "description": "Canadian Pacific Kansas City Limited operates a transcontinental freight railway network spanning Canada, the US, and Mexico.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CP.png"
+  },
+  {
+    "symbol": "STN",
+    "name": "Stantec Inc.",
+    "canadian_ticker": "STN.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/STN.TO/",
+    "description": "Stantec Inc. is a global professional services firm in planning, engineering, architecture, and environmental consulting.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/STN.png"
+  },
+  {
+    "symbol": "TIH",
+    "name": "Toromont Industries Ltd.",
+    "canadian_ticker": "TIH.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/TIH.TO/",
+    "description": "Toromont Industries Ltd. sells, rents, and services construction equipment and industrial refrigeration systems (Caterpillar dealer).",
+    "logo_url": "https://financialmodelingprep.com/image-stock/TIH.png"
+  },
+  {
+    "symbol": "DSG",
+    "name": "Descartes Systems Group Inc.",
+    "canadian_ticker": "DSG.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/DSG.TO/",
+    "description": "The Descartes Systems Group Inc. provides logistics, supply chain, and transportation management software-as-a-service solutions.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/DSG.png"
+  },
+  {
+    "symbol": "CNQ",
+    "name": "Canadian Natural Resources Limited",
+    "canadian_ticker": "CNQ.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CNQ.TO/",
+    "description": "Canadian Natural Resources Limited is a large independent oil and natural gas exploration, development, and production company.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CNQ.png"
+  },
+  {
+    "symbol": "SU",
+    "name": "Suncor Energy Inc.",
+    "canadian_ticker": "SU.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/SU.TO/",
+    "description": "Suncor Energy Inc. is an integrated energy company engaged in oil sands development, production, refining, and retail.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/SU.png"
+  },
+  {
+    "symbol": "CVE",
+    "name": "Cenovus Energy Inc.",
+    "canadian_ticker": "CVE.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CVE.TO/",
+    "description": "Cenovus Energy Inc. is an integrated oil company with upstream production and downstream refining operations.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CVE.png"
+  },
+  {
+    "symbol": "IMO",
+    "name": "Imperial Oil Limited",
+    "canadian_ticker": "IMO.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/IMO.TO/",
+    "description": "Imperial Oil Limited is a major Canadian integrated oil company involved in exploration, production, refining, and marketing.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/IMO.png"
+  },
+  {
+    "symbol": "AEM",
+    "name": "Agnico Eagle Mines Limited",
+    "canadian_ticker": "AEM.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/AEM.TO/",
+    "description": "Agnico Eagle Mines Limited is a senior gold mining company with operations in Canada, Australia, Finland, and Mexico.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/AEM.png"
+  },
+  {
+    "symbol": "WPM",
+    "name": "Wheaton Precious Metals Corp.",
+    "canadian_ticker": "WPM.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/WPM.TO/",
+    "description": "Wheaton Precious Metals Corp. is a streaming company that provides upfront financing to miners in exchange for precious metals production.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/WPM.png"
+  },
+  {
+    "symbol": "CCO",
+    "name": "Cameco Corporation",
+    "canadian_ticker": "CCO.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/CCO.TO/",
+    "description": "Cameco Corporation is one of the world's largest uranium producers, also involved in nuclear fuel services.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/CCO.png"
+  },
+  {
+    "symbol": "MEG",
+    "name": "MEG Energy Corp.",
+    "canadian_ticker": "MEG.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/MEG.TO/",
+    "description": "MEG Energy Corp. is an oil sands-focused energy company engaged in thermal in-situ bitumen production.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/MEG.png"
+  },
+  {
+    "symbol": "SAP",
+    "name": "Saputo Inc.",
+    "canadian_ticker": "SAP.TO",
+    "yahoo_finance_url": "https://finance.yahoo.com/quote/SAP.TO/",
+    "description": "Saputo Inc. is a global dairy processor and one of the largest cheese manufacturers, with operations in Canada, the US, and internationally.",
+    "logo_url": "https://financialmodelingprep.com/image-stock/SAP.png"
+  }
 ];
 
-function isCA(s) { return s.canadian_ticker.endsWith('.TO'); }
+document.getElementById('hdate').textContent = new Date().toLocaleDateString('en-CA', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
 let activeFilter = 'all';
+
+function isCA(s) { return s.canadian_ticker.endsWith('.TO'); }
 
 function setFilter(f, el) {
   activeFilter = f;
@@ -458,64 +654,34 @@ function render() {
   const sortBy = document.getElementById('sort').value;
 
   let list = stocks.filter(s => {
-    const matchFilter =
-      activeFilter === 'all' ||
+    const matchFilter = activeFilter === 'all' ||
       (activeFilter === 'us' && !isCA(s)) ||
       (activeFilter === 'ca' && isCA(s));
-    const matchQ =
-      !q ||
-      s.symbol.toLowerCase().includes(q) ||
-      s.name.toLowerCase().includes(q) ||
-      s.canadian_ticker.toLowerCase().includes(q);
+    const matchQ = !q || s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q);
     return matchFilter && matchQ;
   });
 
-  list.sort((a, b) =>
-    sortBy === 'symbol'
-      ? a.symbol.localeCompare(b.symbol)
-      : a.name.localeCompare(b.name)
-  );
+  list.sort((a,b) => sortBy === 'symbol' ? a.symbol.localeCompare(b.symbol) : a.name.localeCompare(b.name));
 
-  document.getElementById('count').textContent =
-    list.length + ' stock' + (list.length !== 1 ? 's' : '') + ' shown';
+  document.getElementById('count').textContent = `${list.length} stock${list.length !== 1 ? 's' : ''} shown`;
 
   const grid = document.getElementById('grid');
-  const empty = document.getElementById('empty');
-
-  if (!list.length) {
-    grid.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-
   grid.innerHTML = list.map(s => {
-    const ca = isCA(s);
-    const catBadge = ca
-      ? `<span class="cat-badge cat-ca">Canadian</span>`
+    const cat = isCA(s) 
+      ? `<span class="cat-badge cat-ca">Canadian</span>` 
       : `<span class="cat-badge cat-us">US CDR</span>`;
-
+    
     return `
-      <div class="card" role="listitem" tabindex="0"
-           onclick="openModal('${s.symbol}')"
-           onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${s.symbol}')">
+      <div class="card" onclick="openModal('${s.symbol}')">
         <div class="card-top">
-          <span class="symbol-badge">${s.symbol}</span>
-          ${catBadge}
+          <div style="display:flex; align-items:center; gap:12px;">
+            <img class="card-logo" src="${s.logo_url}" alt="${s.symbol}">
+            <span class="symbol-badge">${s.symbol}</span>
+          </div>
+          ${cat}
         </div>
         <div class="card-name">${s.name}</div>
-        <div class="card-ticker">
-          <i class="ti ti-tag" aria-hidden="true"></i>${s.canadian_ticker}
-        </div>
-        <hr class="card-divider">
-        <div class="card-actions" onclick="event.stopPropagation()">
-          <button class="btn-details" onclick="openModal('${s.symbol}')">
-            <i class="ti ti-info-circle" aria-hidden="true"></i> Details
-          </button>
-          <a class="btn-yahoo" href="${s.yahoo_finance_url}" target="_blank" rel="noopener noreferrer">
-            <i class="ti ti-external-link" aria-hidden="true"></i> Yahoo Finance
-          </a>
-        </div>
+        <div class="card-ticker">${s.canadian_ticker}</div>
       </div>`;
   }).join('');
 }
@@ -523,47 +689,24 @@ function render() {
 function openModal(sym) {
   const s = stocks.find(x => x.symbol === sym);
   if (!s) return;
-  const ca = isCA(s);
 
   document.getElementById('m-name').textContent = s.name;
+  document.getElementById('m-ticker').textContent = s.canadian_ticker;
+  document.getElementById('m-logo').src = s.logo_url;
+
   document.getElementById('m-body').innerHTML = `
-    <div class="info-row">
-      <i class="ti ti-chart-bar" aria-hidden="true"></i>
-      <div><div class="info-label">US Symbol</div><div class="info-value">${s.symbol}</div></div>
-    </div>
-    <div class="info-row">
-      <i class="ti ti-flag" aria-hidden="true"></i>
-      <div><div class="info-label">Canadian Ticker</div><div class="info-value">${s.canadian_ticker}</div></div>
-    </div>
-    <div class="info-row">
-      <i class="ti ti-building-bank" aria-hidden="true"></i>
-      <div><div class="info-label">Exchange</div><div class="info-value">${ca ? 'Toronto Stock Exchange (TSX)' : 'NEO Exchange (CDR — CAD Hedged)'}</div></div>
-    </div>
-    <div class="info-row">
-      <i class="ti ti-currency-dollar" aria-hidden="true"></i>
-      <div><div class="info-label">Currency</div><div class="info-value">Canadian Dollars (CAD)</div></div>
-    </div>
-    <div class="info-row">
-      <i class="ti ti-info-circle" aria-hidden="true"></i>
-      <div><div class="info-label">Type</div><div class="info-value">${ca ? 'Canadian-listed company' : 'Canadian Depositary Receipt (CDR)'}</div></div>
-    </div>
+    <p class="modal-description">${s.description}</p>
+    <a href="${s.yahoo_finance_url}" target="_blank" style="display:block; margin-top:20px; padding:14px; background:#000; color:white; text-align:center; border-radius:10px; text-decoration:none; font-weight:600;">
+      Open on Yahoo Finance →
+    </a>
   `;
-  document.getElementById('m-yahoo').href = s.yahoo_finance_url;
+
   document.getElementById('modal').classList.add('open');
-  document.getElementById('modal-box').focus();
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
 }
-
-function closeModalOnBg(e) {
-  if (e.target === document.getElementById('modal')) closeModal();
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
 
 render();
 </script>
