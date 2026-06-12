@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Stock Watch</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:   #ffffff;
+      --gray-50: #fafafa;
+      --gray-100:#f4f4f4;
+      --gray-200:#e8e8e8;
+      --gray-300:#d0d0d0;
+      --gray-400:#a8a8a8;
+      --gray-500:#787878;
+      --gray-600:#505050;
+      --gray-700:#383838;
+      --gray-800:#202020;
+      --black:   #0a0a0a;
+      --up:      #16a34a;
+      --up-bg:   #f0fdf4;
+      --down:    #dc2626;
+      --down-bg: #fef2f2;
+
+      --bg:        var(--gray-100);
+      --surface:   var(--white);
+      --surface-2: var(--gray-50);
+      --surface-3: var(--gray-200);
+      --text:      var(--black);
+      --text-muted:var(--gray-500);
+      --border:    var(--gray-200);
+      --border-strong: var(--gray-400);
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html { font-size: 18px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--black);
+      padding: 0 1.5rem;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; height: 64px;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo i { color: #fff; font-size: 20px; }
+    .header-title { font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+    .header-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); letter-spacing: 0.02em; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .header-date { font-size: 0.78rem; color: rgba(255,255,255,0.45); letter-spacing: 0.03em; text-align: right; }
+
+    /* Refresh button */
+    #refresh-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-sm); padding: 6px 12px;
+      cursor: pointer; transition: all .15s; font-family: var(--font-ui);
+    }
+    #refresh-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    #refresh-btn.loading i { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Page ── */
+    .page { max-width: 980px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+
+    /* ── Price banner ── */
+    .price-banner {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 8px; margin-bottom: 1rem;
+      padding: 0.65rem 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .price-banner-left { display: flex; align-items: center; gap: 8px; }
+    .price-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-400); flex-shrink: 0; }
+    .price-dot.live { background: var(--up); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    #price-status { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex; flex-wrap: wrap;
+      gap: 10px; align-items: center;
+      margin-bottom: 1rem;
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-wrap i {
+      position: absolute; left: 11px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted); font-size: 18px; pointer-events: none;
+    }
+    #search {
+      width: 100%; font-size: 1rem;
+      padding: 10px 14px 10px 36px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      background: var(--surface); color: var(--text); outline: none;
+      font-family: var(--font-ui);
+    }
+    #search:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(0,0,0,0.08); }
+    #search::placeholder { color: var(--gray-400); }
+
+    .filter-btns { display: flex; gap: 7px; flex-wrap: wrap; }
+    .filter-btn {
+      font-size: 0.88rem; padding: 8px 15px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface); color: var(--text-muted);
+      cursor: pointer; transition: all .15s; font-family: var(--font-ui);
+    }
+    .filter-btn:hover { border-color: var(--black); color: var(--black); }
+    .filter-btn.active { background: var(--black); color: var(--white); border-color: var(--black); font-weight: 600; }
+
+    .sort-wrap { display: flex; align-items: center; gap: 8px; }
+    .sort-wrap label { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; }
+    #sort {
+      font-size: 0.9rem; padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface); color: var(--text);
+      cursor: pointer; font-family: var(--font-ui);
+    }
+
+    .count { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; letter-spacing: 0.02em; text-transform: uppercase; }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.2rem 1rem;
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+      display: flex; flex-direction: column; gap: 9px;
+    }
+    .card:hover { border-color: var(--black); box-shadow: 3px 3px 0 var(--black); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+
+    .symbol-badge {
+      font-size: 0.75rem; font-weight: 700;
+      background: var(--black); color: var(--white);
+      padding: 3px 10px; border-radius: var(--radius-sm);
+      white-space: nowrap; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .cat-badge {
+      font-size: 0.72rem; padding: 3px 9px;
+      border-radius: var(--radius-sm); white-space: nowrap; font-weight: 500;
+    }
+    .cat-us { background: var(--white); color: var(--gray-600); border: 1px solid var(--gray-300); }
+    .cat-ca { background: var(--gray-200); color: var(--gray-700); border: 1px solid var(--gray-300); }
+
+    .card-name { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .card-ticker { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; font-family: monospace; }
+
+    /* ── Price block ── */
+    .card-price {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      min-height: 46px;
+    }
+    .price-left { display: flex; flex-direction: column; gap: 1px; }
+    .price-value {
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--text); font-variant-numeric: tabular-nums;
+      font-family: var(--font-ui);
+    }
+    .price-value.up   { color: var(--up); }
+    .price-value.down { color: var(--down); }
+
+    .price-change {
+      font-size: 0.78rem; font-weight: 600;
+      display: flex; align-items: center; gap: 3px;
+    }
+    .price-change.up   { color: var(--up); }
+    .price-change.down { color: var(--down); }
+    .price-change.flat { color: var(--text-muted); }
+
+    .price-badge {
+      font-size: 0.72rem; font-weight: 700;
+      padding: 4px 8px; border-radius: var(--radius-sm);
+      letter-spacing: 0.03em; white-space: nowrap;
+    }
+    .price-badge.up   { background: var(--up-bg); color: var(--up); border: 1px solid #bbf7d0; }
+    .price-badge.down { background: var(--down-bg); color: var(--down); border: 1px solid #fecaca; }
+    .price-badge.flat { background: var(--gray-100); color: var(--text-muted); border: 1px solid var(--gray-300); }
+
+    .price-loading {
+      font-size: 0.8rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+      width: 100%; justify-content: center;
+    }
+    .price-loading i { animation: spin 0.8s linear infinite; }
+
+    .card-divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
+
+    .card-actions { display: flex; gap: 7px; }
+    .btn-details {
+      flex: 1; padding: 9px 8px; font-size: 0.9rem;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface-2); color: var(--text);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      font-family: var(--font-ui); transition: all .15s;
+    }
+    .btn-details:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    .btn-yahoo {
+      flex: 1; padding: 9px 8px; font-size: 0.9rem;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--black);
+      background: var(--white); color: var(--black);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      text-decoration: none; font-family: var(--font-ui); transition: all .15s; font-weight: 600;
+    }
+    .btn-yahoo:hover { background: var(--black); color: var(--white); }
+
+    /* ── Empty ── */
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 1.1rem; display: none; }
+    .empty i { font-size: 48px; display: block; margin-bottom: 12px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); z-index: 200;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--black);
+      box-shadow: 6px 6px 0 var(--black);
+      padding: 1.5rem;
+      max-width: 460px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 1.25rem;
+      gap: 12px; padding-bottom: 1rem;
+      border-bottom: 2px solid var(--black);
+    }
+    .modal-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+    .modal-close {
+      font-size: 26px; cursor: pointer;
+      color: var(--text-muted); background: none;
+      border: none; line-height: 1; padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui); flex-shrink: 0; transition: all .12s;
+    }
+    .modal-close:hover { background: var(--black); color: var(--white); }
+
+    /* modal price hero */
+    .modal-price-hero {
+      background: var(--gray-100); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md); padding: 1rem;
+      margin-bottom: 1rem; text-align: center;
+    }
+    .modal-price-hero .big-price {
+      font-size: 2rem; font-weight: 800; font-family: var(--font-ui);
+      font-variant-numeric: tabular-nums; color: var(--text);
+    }
+    .modal-price-hero .big-price.up   { color: var(--up); }
+    .modal-price-hero .big-price.down { color: var(--down); }
+    .modal-price-hero .big-change {
+      font-size: 0.95rem; font-weight: 600; margin-top: 4px;
+    }
+    .modal-price-hero .big-change.up   { color: var(--up); }
+    .modal-price-hero .big-change.down { color: var(--down); }
+    .modal-price-hero .big-change.flat { color: var(--text-muted); }
+    .modal-price-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+
+    .info-row {
+      display: flex; align-items: flex-start;
+      gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row > i { font-size: 20px; color: var(--gray-500); width: 26px; flex-shrink: 0; margin-top: 2px; }
+    .info-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .info-value { font-size: 1rem; font-weight: 600; color: var(--text); }
+
+    .modal-yahoo {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 1.25rem; padding: 13px;
+      font-size: 1rem; font-weight: 700;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--black);
+      background: var(--black); color: var(--white);
+      text-decoration: none; transition: all .15s;
+    }
+    .modal-yahoo:hover { background: var(--white); color: var(--black); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--black); color: rgba(255,255,255,0.4);
+      text-align: center; padding: 1.25rem 1rem;
+      font-size: 0.8rem; margin-top: 2.5rem; letter-spacing: 0.03em;
+    }
+    footer span { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+      .grid { grid-template-columns: 1fr; }
+      .controls { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo" aria-hidden="true"><i class="ti ti-chart-line"></i></div>
+    <div>
+      <div class="header-title">My Stock Watch</div>
+      <div class="header-sub">48 stocks &middot; Canadian market</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-date" id="hdate"></div>
+    <button id="refresh-btn" onclick="refreshPrices()" title="Refresh prices">
+      <i class="ti ti-refresh"></i> Refresh
+    </button>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="price-banner">
+    <div class="price-banner-left">
+      <div class="price-dot" id="price-dot"></div>
+      <span id="price-status">Loading live prices…</span>
+    </div>
+    <span style="font-size:0.75rem; color:var(--gray-400)">Data via Yahoo Finance &middot; CAD prices</span>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" id="search" placeholder="Search by name or symbol…" oninput="render()" aria-label="Search stocks">
+    </div>
+    <div class="filter-btns" role="group" aria-label="Filter stocks">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('us',this)">US CDR</button>
+      <button class="filter-btn" onclick="setFilter('ca',this)">Canadian</button>
+      <button class="filter-btn" onclick="setFilter('up',this)">▲ Up</button>
+      <button class="filter-btn" onclick="setFilter('down',this)">▼ Down</button>
+    </div>
+    <div class="sort-wrap">
+      <label for="sort">Sort:</label>
+      <select id="sort" onchange="render()">
+        <option value="name">Name A–Z</option>
+        <option value="symbol">Symbol A–Z</option>
+        <option value="change_desc">Biggest Gain</option>
+        <option value="change_asc">Biggest Loss</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="count" id="count" aria-live="polite"></p>
+  <div class="grid" id="grid" role="list"></div>
+  <div class="empty" id="empty" role="status">
+    <i class="ti ti-mood-empty" aria-hidden="true"></i>
+    No stocks found. Try a different search.
+  </div>
+</main>
+
+<footer>
+  <i class="ti ti-shield-check" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"></i>
+  <span>My Stock Watch</span> &mdash; For informational purposes only. Not financial advice. &copy; 2026
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-name" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <h2 id="m-name"></h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">&times;</button>
+    </div>
+    <div id="m-body"></div>
+    <a id="m-yahoo" class="modal-yahoo" href="#" target="_blank" rel="noopener noreferrer">
+      <i class="ti ti-external-link" aria-hidden="true"></i> Open on Yahoo Finance
+    </a>
+  </div>
+</div>
+
+<script>
+document.getElementById('hdate').textContent = new Date().toLocaleDateString('en-CA', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
+const stocks = [
+  {"symbol":"NVDA","name":"NVIDIA Corp. CAD Hedged CDR","canadian_ticker":"NVDA.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/NVDA.NE/"},
+  {"symbol":"AAPL","name":"Apple Inc. CAD Hedged CDR","canadian_ticker":"AAPL.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AAPL.NE/"},
+  {"symbol":"MSFT","name":"Microsoft Corp. CAD Hedged CDR","canadian_ticker":"MSFT.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MSFT.NE/"},
+  {"symbol":"GOOGL","name":"Alphabet Inc. CAD Hedged CDR","canadian_ticker":"GOOG.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GOOG.NE/"},
+  {"symbol":"AVGO","name":"Broadcom Inc. CAD Hedged CDR","canadian_ticker":"AVGO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AVGO.NE/"},
+  {"symbol":"TSLA","name":"Tesla Inc. CAD Hedged CDR","canadian_ticker":"TSLA.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TSLA.NE/"},
+  {"symbol":"MU","name":"Micron Technology Inc. CAD Hedged CDR","canadian_ticker":"MU.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MU.NE/"},
+  {"symbol":"LLY","name":"Eli Lilly & Co. CAD Hedged CDR","canadian_ticker":"LLY.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/LLY.NE/"},
+  {"symbol":"AMD","name":"Advanced Micro Devices Inc. CAD Hedged CDR","canadian_ticker":"AMD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AMD.NE/"},
+  {"symbol":"XOM","name":"Exxon Mobil Corp. CAD Hedged CDR","canadian_ticker":"XOM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/XOM.NE/"},
+  {"symbol":"JNJ","name":"Johnson & Johnson CAD Hedged CDR","canadian_ticker":"JNJ.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/JNJ.NE/"},
+  {"symbol":"CSCO","name":"Cisco Systems Inc. CAD Hedged CDR","canadian_ticker":"CSCO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CSCO.NE/"},
+  {"symbol":"LRCX","name":"Lam Research Corp. CAD Hedged CDR","canadian_ticker":"LRCX.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/LRCX.NE/"},
+  {"symbol":"ABBV","name":"AbbVie Inc. CAD Hedged CDR","canadian_ticker":"ABBV.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ABBV.NE/"},
+  {"symbol":"AMAT","name":"Applied Materials Inc. CAD Hedged CDR","canadian_ticker":"AMAT.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/AMAT.NE/"},
+  {"symbol":"ORCL","name":"Oracle Corp. CAD Hedged CDR","canadian_ticker":"ORCL.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ORCL.NE/"},
+  {"symbol":"PG","name":"Procter & Gamble Co. CAD Hedged CDR","canadian_ticker":"PG.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PG.NE/"},
+  {"symbol":"HD","name":"Home Depot Inc. CAD Hedged CDR","canadian_ticker":"HD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/HD.NE/"},
+  {"symbol":"MRK","name":"Merck & Co. Inc. CAD Hedged CDR","canadian_ticker":"MRK.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/MRK.NE/"},
+  {"symbol":"TXN","name":"Texas Instruments Inc. CAD Hedged CDR","canadian_ticker":"TXN.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TXN.NE/"},
+  {"symbol":"GEV","name":"GE Vernova Inc. CAD Hedged CDR","canadian_ticker":"GEV.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GEV.NE/"},
+  {"symbol":"QCOM","name":"Qualcomm Inc. CAD Hedged CDR","canadian_ticker":"QCOM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/QCOM.NE/"},
+  {"symbol":"KLAC","name":"KLA Corp. CAD Hedged CDR","canadian_ticker":"KLAC.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/KLAC.NE/"},
+  {"symbol":"IBM","name":"International Business Machines Corp. CAD Hedged CDR","canadian_ticker":"IBM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/IBM.NE/"},
+  {"symbol":"PANW","name":"Palo Alto Networks Inc. CAD Hedged CDR","canadian_ticker":"PANW.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PANW.NE/"},
+  {"symbol":"PEP","name":"PepsiCo Inc. CAD Hedged CDR","canadian_ticker":"PEP.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/PEP.NE/"},
+  {"symbol":"TMO","name":"Thermo Fisher Scientific Inc. CAD Hedged CDR","canadian_ticker":"TMO.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TMO.NE/"},
+  {"symbol":"TJX","name":"TJX Companies Inc. CAD Hedged CDR","canadian_ticker":"TJX.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/TJX.NE/"},
+  {"symbol":"GILD","name":"Gilead Sciences Inc. CAD Hedged CDR","canadian_ticker":"GILD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/GILD.NE/"},
+  {"symbol":"CRWD","name":"CrowdStrike Holdings Inc. CAD Hedged CDR","canadian_ticker":"CRWD.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CRWD.NE/"},
+  {"symbol":"CRM","name":"Salesforce Inc. CAD Hedged CDR","canadian_ticker":"CRM.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/CRM.NE/"},
+  {"symbol":"ANET","name":"Arista Networks Inc. CAD Hedged CDR","canadian_ticker":"ANET.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/ANET.NE/"},
+  {"symbol":"UNP","name":"Union Pacific Corp. CAD Hedged CDR","canadian_ticker":"UNP.NE","yahoo_finance_url":"https://finance.yahoo.com/quote/UNP.NE/"},
+  {"symbol":"SHOP","name":"Shopify Inc.","canadian_ticker":"SHOP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SHOP.TO/"},
+  {"symbol":"CSU","name":"Constellation Software Inc.","canadian_ticker":"CSU.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CSU.TO/"},
+  {"symbol":"CNR","name":"Canadian National Railway Company","canadian_ticker":"CNR.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CNR.TO/"},
+  {"symbol":"CP","name":"Canadian Pacific Kansas City Limited","canadian_ticker":"CP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CP.TO/"},
+  {"symbol":"STN","name":"Stantec Inc.","canadian_ticker":"STN.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/STN.TO/"},
+  {"symbol":"TIH","name":"Toromont Industries Ltd.","canadian_ticker":"TIH.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/TIH.TO/"},
+  {"symbol":"DSG","name":"Descartes Systems Group Inc.","canadian_ticker":"DSG.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/DSG.TO/"},
+  {"symbol":"CNQ","name":"Canadian Natural Resources Limited","canadian_ticker":"CNQ.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CNQ.TO/"},
+  {"symbol":"SU","name":"Suncor Energy Inc.","canadian_ticker":"SU.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SU.TO/"},
+  {"symbol":"CVE","name":"Cenovus Energy Inc.","canadian_ticker":"CVE.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CVE.TO/"},
+  {"symbol":"IMO","name":"Imperial Oil Limited","canadian_ticker":"IMO.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/IMO.TO/"},
+  {"symbol":"AEM","name":"Agnico Eagle Mines Limited","canadian_ticker":"AEM.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/AEM.TO/"},
+  {"symbol":"WPM","name":"Wheaton Precious Metals Corp.","canadian_ticker":"WPM.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/WPM.TO/"},
+  {"symbol":"CCO","name":"Cameco Corporation","canadian_ticker":"CCO.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/CCO.TO/"},
+  {"symbol":"MEG","name":"MEG Energy Corp.","canadian_ticker":"MEG.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/MEG.TO/"},
+  {"symbol":"SAP","name":"Saputo Inc.","canadian_ticker":"SAP.TO","yahoo_finance_url":"https://finance.yahoo.com/quote/SAP.TO/"}
+];
+
+// ── Price cache ──────────────────────────────────────────────
+const priceCache = {}; // { ticker: { price, change, changePct, open, high, low, vol, fetchedAt } }
+let totalLoaded = 0;
+let totalFailed = 0;
+
+function isCA(s) { return s.canadian_ticker.endsWith('.TO'); }
+let activeFilter = 'all';
+
+// ── Fetch a single ticker via Yahoo Finance (same API as the reference adapter) ──
+async function fetchPrice(ticker) {
+  const period2 = Math.floor(Date.now() / 1000);
+  const period1 = period2 - 2 * 24 * 60 * 60; // last 2 days of daily bars
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&period1=${period1}&period2=${period2}&includePrePost=false`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+
+    const result = json?.chart?.result?.[0];
+    if (!result) throw new Error('No result');
+
+    const meta = result.meta;
+    const price   = meta.regularMarketPrice;
+    const prevClose = meta.chartPreviousClose || meta.previousClose || meta.regularMarketPreviousClose;
+
+    if (!price) throw new Error('No price');
+
+    const change    = prevClose ? parseFloat((price - prevClose).toFixed(4)) : 0;
+    const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;
+
+    return {
+      price:     parseFloat(price.toFixed(2)),
+      change,
+      changePct,
+      prevClose: prevClose ? parseFloat(prevClose.toFixed(2)) : null,
+      high:      meta.regularMarketDayHigh   ? parseFloat(meta.regularMarketDayHigh.toFixed(2))   : null,
+      low:       meta.regularMarketDayLow    ? parseFloat(meta.regularMarketDayLow.toFixed(2))    : null,
+      open:      meta.regularMarketOpen      ? parseFloat(meta.regularMarketOpen.toFixed(2))      : null,
+      vol:       meta.regularMarketVolume    || null,
+      currency:  meta.currency              || 'CAD',
+      fetchedAt: new Date()
+    };
+  } catch(e) {
+    return null;
+  }
+}
+
+// ── Batch-fetch all with small delay (respects Yahoo just like the reference adapter) ──
+async function loadAllPrices() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('loading');
+  btn.querySelector('i').className = 'ti ti-refresh';
+
+  totalLoaded = 0; totalFailed = 0;
+  updateStatus('Loading prices… 0 / ' + stocks.length, false);
+
+  for (let i = 0; i < stocks.length; i++) {
+    const s = stocks[i];
+    const data = await fetchPrice(s.canadian_ticker);
+    if (data) {
+      priceCache[s.canadian_ticker] = data;
+      totalLoaded++;
+    } else {
+      totalFailed++;
+    }
+    updateStatus(`Loading prices… ${i + 1} / ${stocks.length}`, false);
+    render(); // update cards as they come in
+    await sleep(150); // gentle delay — same pattern as the reference adapter
+  }
+
+  const t = new Date().toLocaleTimeString('en-CA', {hour:'2-digit', minute:'2-digit'});
+  updateStatus(`Prices updated at ${t} · ${totalLoaded} loaded${totalFailed ? ', ' + totalFailed + ' unavailable' : ''}`, true);
+  btn.classList.remove('loading');
+  render();
+}
+
+function refreshPrices() {
+  Object.keys(priceCache).forEach(k => delete priceCache[k]);
+  loadAllPrices();
+}
+
+function updateStatus(msg, live) {
+  document.getElementById('price-status').textContent = msg;
+  const dot = document.getElementById('price-dot');
+  dot.className = 'price-dot' + (live ? ' live' : '');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function fmtPrice(p, currency) {
+  if (p === null || p === undefined) return '—';
+  return (currency === 'USD' ? 'US$' : 'CA$') + p.toLocaleString('en-CA', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtVol(v) {
+  if (!v) return '—';
+  if (v >= 1e6) return (v/1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return (v/1e3).toFixed(1) + 'K';
+  return v.toString();
+}
+
+// ── Build price block HTML ──
+function priceBlockHTML(ticker) {
+  const p = priceCache[ticker];
+  if (!p) {
+    return `<div class="card-price"><div class="price-loading"><i class="ti ti-loader-2"></i> Loading…</div></div>`;
+  }
+  const dir = p.changePct > 0 ? 'up' : p.changePct < 0 ? 'down' : 'flat';
+  const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '–';
+  const sign  = p.change > 0 ? '+' : '';
+  return `
+    <div class="card-price">
+      <div class="price-left">
+        <div class="price-value ${dir}">${fmtPrice(p.price, p.currency)}</div>
+        <div class="price-change ${dir}">${arrow} ${sign}${p.change.toFixed(2)} (${sign}${p.changePct.toFixed(2)}%)</div>
+      </div>
+      <div class="price-badge ${dir}">${arrow} ${sign}${p.changePct.toFixed(2)}%</div>
+    </div>`;
+}
+
+// ── Render ──
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const sortBy = document.getElementById('sort').value;
+
+  let list = stocks.filter(s => {
+    const p = priceCache[s.canadian_ticker];
+    if (activeFilter === 'us'   && isCA(s))   return false;
+    if (activeFilter === 'ca'   && !isCA(s))  return false;
+    if (activeFilter === 'up'   && (!p || p.changePct <= 0)) return false;
+    if (activeFilter === 'down' && (!p || p.changePct >= 0)) return false;
+    if (q && !s.symbol.toLowerCase().includes(q) &&
+             !s.name.toLowerCase().includes(q) &&
+             !s.canadian_ticker.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  list.sort((a, b) => {
+    if (sortBy === 'symbol') return a.symbol.localeCompare(b.symbol);
+    if (sortBy === 'change_desc') {
+      const pa = priceCache[a.canadian_ticker]?.changePct ?? -999;
+      const pb = priceCache[b.canadian_ticker]?.changePct ?? -999;
+      return pb - pa;
+    }
+    if (sortBy === 'change_asc') {
+      const pa = priceCache[a.canadian_ticker]?.changePct ?? 999;
+      const pb = priceCache[b.canadian_ticker]?.changePct ?? 999;
+      return pa - pb;
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('count').textContent =
+    list.length + ' stock' + (list.length !== 1 ? 's' : '') + ' shown';
+
+  const grid  = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+
+  if (!list.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  grid.innerHTML = list.map(s => {
+    const ca = isCA(s);
+    const catBadge = ca
+      ? `<span class="cat-badge cat-ca">Canadian</span>`
+      : `<span class="cat-badge cat-us">US CDR</span>`;
+    return `
+      <div class="card" role="listitem" tabindex="0"
+           onclick="openModal('${s.symbol}')"
+           onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${s.symbol}')">
+        <div class="card-top">
+          <span class="symbol-badge">${s.symbol}</span>
+          ${catBadge}
+        </div>
+        <div class="card-name">${s.name}</div>
+        <div class="card-ticker"><i class="ti ti-tag" aria-hidden="true"></i>${s.canadian_ticker}</div>
+        ${priceBlockHTML(s.canadian_ticker)}
+        <hr class="card-divider">
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="btn-details" onclick="openModal('${s.symbol}')">
+            <i class="ti ti-info-circle" aria-hidden="true"></i> Details
+          </button>
+          <a class="btn-yahoo" href="${s.yahoo_finance_url}" target="_blank" rel="noopener noreferrer">
+            <i class="ti ti-external-link" aria-hidden="true"></i> Yahoo Finance
+          </a>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Modal ──
+function openModal(sym) {
+  const s = stocks.find(x => x.symbol === sym);
+  if (!s) return;
+  const ca = isCA(s);
+  const p  = priceCache[s.canadian_ticker];
+
+  const dir    = p ? (p.changePct > 0 ? 'up' : p.changePct < 0 ? 'down' : 'flat') : '';
+  const arrow  = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '–';
+  const sign   = p && p.change > 0 ? '+' : '';
+
+  const priceHero = p ? `
+    <div class="modal-price-hero">
+      <div class="modal-price-label">Current Price (CAD)</div>
+      <div class="big-price ${dir}">${fmtPrice(p.price, p.currency)}</div>
+      <div class="big-change ${dir}">${arrow} ${sign}${p.change.toFixed(2)} &nbsp;(${sign}${p.changePct.toFixed(2)}%) today</div>
+    </div>` : '';
+
+  document.getElementById('m-name').textContent = s.name;
+  document.getElementById('m-body').innerHTML = `
+    ${priceHero}
+    <div class="info-row">
+      <i class="ti ti-chart-bar" aria-hidden="true"></i>
+      <div><div class="info-label">US Symbol</div><div class="info-value">${s.symbol}</div></div>
+    </div>
+    <div class="info-row">
+      <i class="ti ti-flag" aria-hidden="true"></i>
+      <div><div class="info-label">Canadian Ticker</div><div class="info-value">${s.canadian_ticker}</div></div>
+    </div>
+    ${p ? `
+    <div class="info-row">
+      <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+      <div><div class="info-label">Day High</div><div class="info-value">${fmtPrice(p.high, p.currency)}</div></div>
+    </div>
+    <div class="info-row">
+      <i class="ti ti-arrow-down-right" aria-hidden="true"></i>
+      <div><div class="info-label">Day Low</div><div class="info-value">${fmtPrice(p.low, p.currency)}</div></div>
+    </div>
+    <div class="info-row">
+      <i class="ti ti-clock" aria-hidden="true"></i>
+      <div><div class="info-label">Previous Close</div><div class="info-value">${fmtPrice(p.prevClose, p.currency)}</div></div>
+    </div>
+    <div class="info-row">
+      <i class="ti ti-activity" aria-hidden="true"></i>
+      <div><div class="info-label">Volume</div><div class="info-value">${fmtVol(p.vol)}</div></div>
+    </div>` : ''}
+    <div class="info-row">
+      <i class="ti ti-building-bank" aria-hidden="true"></i>
+      <div><div class="info-label">Exchange</div><div class="info-value">${ca ? 'Toronto Stock Exchange (TSX)' : 'NEO Exchange (CDR — CAD Hedged)'}</div></div>
+    </div>
+    <div class="info-row">
+      <i class="ti ti-info-circle" aria-hidden="true"></i>
+      <div><div class="info-label">Type</div><div class="info-value">${ca ? 'Canadian-listed company' : 'Canadian Depositary Receipt (CDR)'}</div></div>
+    </div>
+  `;
+  document.getElementById('m-yahoo').href = s.yahoo_finance_url;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-box').focus();
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeModalOnBg(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Boot ──
+render();
+loadAllPrices();
+</script>
+</body>
+</html>
